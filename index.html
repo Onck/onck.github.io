@@ -10,14 +10,67 @@
                 background-color: aqua;
                 font-family: sans-serif;
                 text-align: center;
+                margin:0;
             }
             .center ol {
                 display: inline-block;
                 text-align: left;
             }
+            .left {
+                text-align: left;
+            }
+            .kotak1 {
+                position: absolute;
+                bottom:0;
+                left:0;
+                width: 20%;
+                height: 90%;
+                background-color: rgba(255, 0, 0, 1.0);
+                z-index: 2;
+            }
+            .kotak2 {
+                position: absolute;
+                top:0;
+                right:0;
+                width: 80%;
+                height: 10%;
+                background-color: rgba(0, 0, 255, 1.0);
+            }
+            .kotak3 {
+                position: absolute;
+                width: 80%;
+                height: 90%;
+                bottom:0;
+                right:0;
+                background-color: rgba(0, 255, 0, 1.0);
+            }
+            .kotak4 {
+                position: absolute;
+                top:0;
+                left:0;
+                border: 1px solid rgba(0, 0, 0, 1.0);
+                width: 20%;
+                height: 10%;
+                background-color: rgba(255, 0, 0, 1.0);
+                z-index: 3;
+            }
         </style>
     </head>
     <body>
+        <div class="kotak4">
+            <h1>
+                Menu
+            </h1>
+        </div>
+        <div class="kotak1">
+            
+        </div>
+        <div class="kotak2">
+            <h1 class="left">
+                Home
+            </h1>
+        </div>
+        <div class="kotak3">
         <center>
             <h1>Selamat Datang!</h1>
             <p>Halo, saya Ilham dari sekolah SMK TIP. 
@@ -36,6 +89,7 @@
             <li><a href="https://onck.github.io/aplikasi/kalkulator">Kalkulator iPhone</a></li>
             <li><a href="https://onck.github.io/gambar3d/lingkaran">Lingkaran 3D</a></li>
             </ol>
+            </div>
             </div>
     </body>
 </html>
