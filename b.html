@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Manajemen Data Siswa - InfinityFree API</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-indigo shadow-sm" style="background-color: #4F46E5;">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#"><i class="bi bi-people-fill me-2"></i> DataSiswa RPL</a>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-table me-2 text-primary"></i> Daftar Siswa Aktif</h5>
+                <button type="button" class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#modalTambah">
+                    <i class="bi bi-plus-lg me-1"></i> Tambah Siswa
+                </button>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>NISN</th>
+                                <th>Nama Lengkap</th>
+                                <th>Kelas / Jurusan</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelSiswa">
+                            <tr><td colspan="6" class="text-center py-4">Memuat data...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL TAMBAH DATA -->
+    <div class="modal fade" id="modalTambah" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-person-plus-fill me-2"></i> Form Tambah Data Siswa</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="formTambah" onsubmit="tambahSiswa(event)">
+                        <div class="row g-3">
+                            <div class="col-md-6"><label class="form-label fw-bold">NISN</label><input type="number" id="tambah_nisn" class="form-control" required></div>
+                            <div class="col-md-6"><label class="form-label fw-bold">Nama Lengkap</label><input type="text" id="tambah_nama" class="form-control" required></div>
+                            <div class="col-md-6"><label class="form-label fw-bold">Email Siswa</label><input type="email" id="tambah_email" class="form-control" required></div>
+                            <div class="col-md-6"><label class="form-label fw-bold">Nomor WhatsApp</label><input type="tel" id="tambah_telepon" class="form-control"></div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Kelas</label>
+                                <select id="tambah_kelas" class="form-select" required>
+                                    <option value="" selected disabled>Pilih Kelas...</option>
+                                    <option value="X (Sepuluh)">X (Sepuluh)</option>
+                                    <option value="XI (Sebelas)">XI (Sebelas)</option>
+                                    <option value="XII (Dua Belas)">XII (Dua Belas)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Jurusan</label>
+                                <select id="tambah_jurusan" class="form-select" required>
+                                    <option value="" selected disabled>Pilih Jurusan...</option>
+                                    <option value="Rekayasa Perangkat Lunak">Rekayasa Perangkat Lunak</option>
+                                    <option value="Teknik Komputer & Jaringan">Teknik Komputer & Jaringan</option>
+                                    <option value="Multimedia / DKV">Multimedia / DKV</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Status Siswa</label>
+                                <select id="tambah_status" class="form-select">
+                                    <option value="Aktif" selected>Aktif</option>
+                                    <option value="Non-Aktif">Non-Aktif</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12"><label class="form-label fw-bold">Alamat Rumah</label><textarea id="tambah_alamat" class="form-control" rows="2"></textarea></div>
+                        </div>
+                        <div class="mt-4 text-end">
+                            <button type="button" class="btn btn-light me-2" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary px-4">Simpan Data</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL EDIT DATA -->
+    <div class="modal fade" id="modalEdit" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title fw-bold">Edit Data Siswa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="formEdit" onsubmit="updateSiswa(event)">
+                        <div class="row g-3">
+                            <div class="col-md-6"><label class="form-label fw-bold">NISN</label><input type="number" id="edit_nisn" class="form-control" readonly></div>
+                            <div class="col-md-6"><label class="form-label fw-bold">Nama Lengkap</label><input type="text" id="edit_nama" class="form-control" required></div>
+                            <div class="col-md-6"><label class="form-label fw-bold">Email Siswa</label><input type="email" id="edit_email" class="form-control" required></div>
+                            <div class="col-md-3"><label class="form-label fw-bold">Kelas</label><input type="text" id="edit_kelas" class="form-control" required></div>
+                            <div class="col-md-3"><label class="form-label fw-bold">Jurusan</label><input type="text" id="edit_jurusan" class="form-control" required></div>
+                        </div>
+                        <div class="mt-4 text-end">
+                            <button type="button" class="btn btn-light me-2" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-warning text-dark px-4 fw-bold">Update Data</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // GANTI LINK INI SESUAI DOMAIN INFINITYFREE KAMU
+        const API_URL = 'http://namadomainmu.infinityfreeapp.com/api.php';
+        let dataSiswaList = [];
+
+        async function loadSiswa() {
+            try {
+                const res = await fetch(`${API_URL}?action=read`);
+                dataSiswaList = await res.json();
+
+                const tbody = document.getElementById('tabelSiswa');
+                tbody.innerHTML = '';
+
+                if (dataSiswaList.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">Belum ada data.</td></tr>';
+                    return;
+                }
+
+                dataSiswaList.forEach(siswa => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${siswa.nisn}</td>
+                        <td><strong>${siswa.nama}</strong></td>
+                        <td>${siswa.kelas} - ${siswa.jurusan}</td>
+                        <td>${siswa.email}</td>
+                        <td><span class="badge ${siswa.status === 'Aktif' ? 'bg-success' : 'bg-secondary'}">${siswa.status}</span></td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-warning me-1" onclick="bukaEdit('${siswa.nisn}')"><i class="bi bi-pencil-square"></i> Edit</button>
+                            <button class="btn btn-sm btn-danger" onclick="hapusSiswa('${siswa.nisn}')"><i class="bi bi-trash"></i> Hapus</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                console.error(err);
+                document.getElementById('tabelSiswa').innerHTML = '<tr><td colspan="6" class="text-center py-4 text-danger">Gagal mengambil data dari server. (Cek kendala CORS/Firewall InfinityFree)</td></tr>';
+            }
+        }
+
+        async function tambahSiswa(e) {
+            e.preventDefault();
+            const payload = {
+                nisn: document.getElementById('tambah_nisn').value,
+                nama: document.getElementById('tambah_nama').value,
+                email: document.getElementById('tambah_email').value,
+                telepon: document.getElementById('tambah_telepon').value,
+                kelas: document.getElementById('tambah_kelas').value,
+                jurusan: document.getElementById('tambah_jurusan').value,
+                status: document.getElementById('tambah_status').value,
+                alamat: document.getElementById('tambah_alamat').value
+            };
+
+            await fetch(`${API_URL}?action=create`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            document.getElementById('formTambah').reset();
+            bootstrap.Modal.getInstance(document.getElementById('modalTambah')).hide();
+            loadSiswa();
+        }
+
+        async function updateSiswa(e) {
+            e.preventDefault();
+            const payload = {
+                nisn: document.getElementById('edit_nisn').value,
+                nama: document.getElementById('edit_nama').value,
+                email: document.getElementById('edit_email').value,
+                kelas: document.getElementById('edit_kelas').value,
+                jurusan: document.getElementById('edit_jurusan').value
+            };
+
+            await fetch(`${API_URL}?action=update`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            bootstrap.Modal.getInstance(document.getElementById('modalEdit')).hide();
+            loadSiswa();
+        }
+
+        async function hapusSiswa(nisn) {
+            if (!confirm('Yakin ingin menghapus?')) return;
+            await fetch(`${API_URL}?action=delete&nisn=${nisn}`);
+            loadSiswa();
+        }
+
+        function bukaEdit(nisn) {
+            const siswa = dataSiswaList.find(i => i.nisn == nisn);
+            if (!siswa) return;
+
+            document.getElementById("edit_nisn").value = siswa.nisn;
+            document.getElementById("edit_nama").value = siswa.nama;
+            document.getElementById("edit_email").value = siswa.email;
+            document.getElementById("edit_kelas").value = siswa.kelas;
+            document.getElementById("edit_jurusan").value = siswa.jurusan;
+
+            new bootstrap.Modal(document.getElementById('modalEdit')).show();
+        }
+
+        loadSiswa();
+    </script>
+</body>
+</html>
